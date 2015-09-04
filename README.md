@@ -10,20 +10,13 @@ This repo utilizes docker compose to launch a cluster of containers to support t
 
 ###Requirements
 * Latest version of [Docker Toolbox](https://www.docker.com/toolbox)
-* Running boot2docker vm
 * Terminal with all docker env variables set
 
 Starting
 -------------
 First determine the ip address of your boot2docker vm
 
-> boot2docker ip
-
-Replace the host variable in `docker-compose.yaml` with that IP
-
-```
-    host: <YOUR IP ADDRESS HERE>
-```
+> docker-machine ls
 
 Start the conatiners
 
@@ -36,8 +29,7 @@ Stopping
 Try It Out
 -------------
 Launch web browser and connect to your docker container's IP over http. 
-The default credientials are `admin/password`
-
+The default credientials are `lemur/password`
 
 Architecture
 -------------
@@ -58,18 +50,13 @@ Issues
 ----------
 
 **Default credentials on the web UI**
-The username for the Lemur web UI is `admin`.  The docker-compose.yml defines the password as `password` by setting the `DOCKER_ADMIN_PASS` environment variable.  
-
-For production use, you will want to modify or remove this default account.
+The username for the Lemur web UI is `lemur` and the default password is `password. You may create new users and disable this service account after the apps has been launched.  
 
 **Default Secrets**
 The docker-compose.yml defines a `secret_key` environment variable which are passed into the Flask application.
 
-For production use, you will want to modify these values.
+This docker generates a flask secret key, a database encryption key and token secret when it is built. These values will change on every docker rebuild. That means that databases will not be compatible between docker rebuilds. 
 
 **Default credentials on the postgres database**
-The username for the postgres database is `postgres`.  The password for this database is actually set in the api-start.sh file found within the lemur-web container.  This password is set to `password`.
-
-You may wish to change this password for production use.
-
+The username for the postgres database is `lemur`.  The password for this database is actually set in the api-start.sh file found within the lemur-web container.  This password is set to `lemur`.
 
