@@ -1,15 +1,20 @@
 server {
+    listen 80;
+    return 301 https://$host$request_uri;
+}
 
-    listen 443;
+server {
+    listen 443 ssl;
     server_name lemur.io;
     charset utf-8;
+    ssl_certificate /etc/nginx/ssl/server.crt;
+    ssl_certificate_key /etc/nginx/ssl/server.key;
+    
+    root /usr/local/src/lemur/lemur/static/dist;
+    index index.html;
+    autoindex on;
 
-    location /static {
-        alias /usr/local/src/lemur/lemur/static/dist;
-        autoindex on;
-    }
-
-    location / {
+    location /api {
         proxy_pass http://web:8000;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;

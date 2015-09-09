@@ -2,20 +2,20 @@ lemur-web:
   restart: always
   build: ./web
   expose:
-    - "8000"
+    - "127.0.0.1:8000:8000"
   links:
     - postgres:postgres
   volumes:
     - /usr/local/src/lemur/lemur/static/dist
   environment:
     DEBUG: False
+    LEMUR_CONF: /usr/local/src/lemur/lemur.conf.py
 lemur-nginx:
   restart: always
   build: ./nginx/
   ports:
     - "80:80"
-  volumes:
-    - /www/static
+    - "443:443"
   volumes_from:
     - lemur-web
   links:
@@ -26,4 +26,4 @@ postgres:
   restart: always
   image: postgres:latest
   ports:
-    - "5432"
+    - "5432:5432"

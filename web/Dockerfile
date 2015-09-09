@@ -15,19 +15,20 @@
 FROM ubuntu:14.04
 MAINTAINER Netflix Open Source Development <talent@netflix.com>
 
-RUN apt-get update && apt-get -y -q install software-properties-common postgresql-9.3 postgresql-client-9.3 postgresql-contrib-9.3 && apt-get install -y curl python-dev python-pip git sudo && apt-get -y -q install python-psycopg2 libpq-dev libffi-dev npm nodejs-legacy
+RUN apt-get update && apt-get install -y curl && curl -sL https://deb.nodesource.com/setup_0.12 | bash - && apt-get -y -q install software-properties-common postgresql-9.3 postgresql-client-9.3 postgresql-contrib-9.3 && apt-get install -y curl python-dev python-pip git sudo && apt-get -y -q install python-psycopg2 libpq-dev libffi-dev nodejs
 
 
 # Install Lemur
 RUN cd /usr/local/src &&\
-  git clone --depth 1 --branch -b 0.1.2 --branch master https://github.com/Netflix/lemur.git &&\
+  git clone --depth 1 -b 0.1.2 --branch master https://github.com/netflix/lemur.git &&\
   cd lemur &&\
-  npm install --unsafe-perm &&\
-  python setup.py install
+  python setup.py develop
 
-# TODO clean up needed bowercomponents/static files
+# Create static files
+RUN cd /usr/local/src/lemur && npm install --unsafe-perm && node_modules/.bin/gulp build && node_modules/.bin/gulp package && rm -r bower_components node_modules
 
+ADD lemur.conf.py /usr/local/src/lemur/lemur.conf.py 
 ADD api-start.sh /usr/local/src/lemur/scripts/api-start.sh
 RUN chmod +x /usr/local/src/lemur/scripts/api-start.sh
 
-ENTRYPOINT ["/usr/local/src/lemur/scripts/api-start.sh"]
+CMD ["/usr/local/src/lemur/scripts/api-start.sh"]
