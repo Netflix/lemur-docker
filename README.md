@@ -78,7 +78,7 @@ and
 
 > docker-compose up 
 
-Your changes should not be reflected in Lemur.
+Your changes should now be reflected in Lemur.
 
 **Default credentials on the postgres database**
 The username for the postgres database is `lemur`.  The password for this database is actually set in the api-start.sh file found within the lemur-web container.  This password is set to `lemur`.
