@@ -73,6 +73,9 @@ If you change a default settings or want to alter the configuration at all you m
 Then execute:
 
 > docker-compose stop
+
+and
+
 > docker-compose up 
 
 Your changes should not be reflected in Lemur.
