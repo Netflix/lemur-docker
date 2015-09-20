@@ -20,7 +20,7 @@ RUN apt-get update && apt-get install -y curl && curl -sL https://deb.nodesource
 
 # Install Lemur
 RUN cd /usr/local/src &&\
-  git clone --depth 1 -b 0.1.2 --branch master https://github.com/netflix/lemur.git &&\
+  git clone --depth 1 -b 0.1.3 --branch master https://github.com/netflix/lemur.git &&\
   cd lemur &&\
   python setup.py develop
 
