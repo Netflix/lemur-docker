@@ -62,7 +62,7 @@ Issues
 
 
 **Default credentials on the web UI**
-The username for the Lemur web UI is `lemur` and the default password is `password. You may create new users and disable this service account after the apps has been launched.  
+The username for the Lemur web UI is `lemur` and the default password is `password`. You may create new users and disable this service account after the apps has been launched.  
 
 **Default Config**
 This comes with a default lemur.conf.py located under the /web. Things like encryption keys and tokens have been filled in these **should** be changed for anything other than experimentation. 

@@ -19,7 +19,8 @@ RUN apt-get update && apt-get install -y curl && curl -sL https://deb.nodesource
 
 
 # Install Lemur
-RUN cd /usr/local/src &&\
+RUN git config --global url."https://".insteadOf git:// &&\
+  cd /usr/local/src &&\
   git clone https://github.com/netflix/lemur.git &&\
   cd lemur &&\
   git fetch &&\
