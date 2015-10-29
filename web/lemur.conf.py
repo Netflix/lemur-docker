@@ -19,7 +19,7 @@ SECRET_KEY = 'hvDtIoyjAHT/iiuOxmYbA1SGBZMa5+9sgllk08GVvXoSbQ0kJ9arlA=='
 
 # You should consider storing these separately from your config
 LEMUR_TOKEN_SECRET = 'p1foIa7n5+nB1GnEpR4Wf2B2UgzUiBT1BHtB5WnTNoJSMVKhdXu1FA=='
-LEMUR_ENCRYPTION_KEY = 'sqKJ+xA3neMsVvq0WHQfTq1j66njEE5Gg/gUspsDKyVDQ9uRV28fiQ=='
+LEMUR_ENCRYPTION_KEYS = ['yWdKiDFE_TAvoTx-E-Cn1sbbktAbmGwjbZGNBXshys4=']
 
 # this is a list of domains as regexes that only admins can issue
 LEMUR_RESTRICTED_DOMAINS = []
