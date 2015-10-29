@@ -17,7 +17,7 @@ Starting
 
 Create a virtualbox vm *only needed for OS X
 
-> docker-machine create --driver lemur
+> docker-machine create --driver virtualbox lemur
 
 Determine the environment
 
