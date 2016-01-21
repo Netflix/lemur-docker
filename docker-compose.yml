@@ -2,13 +2,13 @@ lemur-web:
   restart: always
   build: ./web
   expose:
-    - "127.0.0.1:8000:8000"
+    - "8000"
   links:
     - postgres:postgres
   volumes:
     - /usr/local/src/lemur/lemur/static/dist
   environment:
-    DEBUG: False
+    DEBUG: 'False'
     LEMUR_CONF: /usr/local/src/lemur/lemur.conf.py
 lemur-nginx:
   restart: always
