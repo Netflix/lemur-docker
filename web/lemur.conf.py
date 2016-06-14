@@ -24,6 +24,9 @@ LEMUR_ENCRYPTION_KEYS = ['yWdKiDFE_TAvoTx-E-Cn1sbbktAbmGwjbZGNBXshys4=']
 # this is a list of domains as regexes that only admins can issue
 LEMUR_RESTRICTED_DOMAINS = []
 
+ACTIVE_PROVIDERS = []
+METRIC_PROVIDERS = []
+
 # Mail Server
 
 LEMUR_EMAIL = ''

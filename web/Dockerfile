@@ -24,7 +24,7 @@ RUN git config --global url."https://".insteadOf git:// &&\
   git clone https://github.com/netflix/lemur.git &&\
   cd lemur &&\
   git fetch &&\
-  git checkout 0.1.5 &&\
+  git checkout 0.3.0 &&\
   python setup.py develop
 
 # Create static files
