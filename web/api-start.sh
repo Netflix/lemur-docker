@@ -37,5 +37,8 @@ echo "Done changing postgres password..."
 echo "DONE CREATING lemurdb..."
 
 cd /usr/local/src/lemur/lemur
+
+export PATH=/usr/local/src/lemur/venv/bin:${PATH}
+
 python manage.py init -p password
 python manage.py start -w 6 -b 0.0.0.0:8000
