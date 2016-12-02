@@ -24,8 +24,12 @@ RUN git config --global url."https://".insteadOf git:// &&\
   git clone https://github.com/netflix/lemur.git &&\
   cd lemur &&\
   git fetch &&\
-  git checkout 0.3.0 &&\
-  python setup.py develop
+  pip install --upgrade virtualenv &&\
+  virtualenv venv &&\
+  export PATH=/usr/local/src/lemur/venv/bin:${PATH} &&\
+  pip install --upgrade pip virtualenv &&\
+  git checkout 0.4.0 &&\
+  make develop
 
 # Create static files
 RUN cd /usr/local/src/lemur && npm install --unsafe-perm && node_modules/.bin/gulp build && node_modules/.bin/gulp package && rm -r bower_components node_modules
