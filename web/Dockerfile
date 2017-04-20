@@ -20,7 +20,7 @@ RUN apt-get update && \
   add-apt-repository -y ppa:jonathonf/python-3.5 
 
 RUN apt-get update && \
-  apt-get install -y curl python3.5-dev python3-pip git sudo libpq-dev libffi-dev \
+  apt-get install -y npm curl python3.5-dev python3-pip git sudo libpq-dev libffi-dev \
     python3-psycopg2 postgresql-client-9.3 postgresql-contrib-9.3 postgresql-9.3 && \
   update-alternatives --install /usr/bin/python python /usr/bin/python3.5 1 && \
 
