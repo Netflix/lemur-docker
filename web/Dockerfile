@@ -16,17 +16,17 @@ FROM ubuntu:14.04
 MAINTAINER Netflix Open Source Development <talent@netflix.com>
 
 RUN apt-get update && \
-	apt-get -y install software-properties-common && \
-	add-apt-repository -y ppa:jonathonf/python-3.5 
+  apt-get -y install software-properties-common && \
+  add-apt-repository -y ppa:jonathonf/python-3.5 
 
 RUN apt-get update && \
-	apt-get install -y curl python3.5-dev python3-pip git sudo libpq-dev libffi-dev \
-		python3-psycopg2 postgresql-client-9.3 postgresql-contrib-9.3 postgresql-9.3 && \
-	update-alternatives --install /usr/bin/python python /usr/bin/python3.5 1 && \
+  apt-get install -y curl python3.5-dev python3-pip git sudo libpq-dev libffi-dev \
+    python3-psycopg2 postgresql-client-9.3 postgresql-contrib-9.3 postgresql-9.3 && \
+  update-alternatives --install /usr/bin/python python /usr/bin/python3.5 1 && \
 
 RUN curl -sL https://deb.nodesource.com/setup_4.x | bash - && \
-	apt-get -y install nodejs && \
-	update-alternatives --install /usr/bin/pip pip /usr/bin/pip3 1
+  apt-get -y install nodejs && \
+  update-alternatives --install /usr/bin/pip pip /usr/bin/pip3 1
 
 RUN locale-gen en_US.UTF-8 
 
