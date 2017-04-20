@@ -15,7 +15,22 @@
 FROM ubuntu:14.04
 MAINTAINER Netflix Open Source Development <talent@netflix.com>
 
-RUN apt-get update && apt-get install -y curl && curl -sL https://deb.nodesource.com/setup_0.12 | bash - && apt-get -y -q install software-properties-common postgresql-9.3 postgresql-client-9.3 postgresql-contrib-9.3 && apt-get install -y curl python-dev python-pip git sudo && apt-get -y -q install python-psycopg2 libpq-dev libffi-dev nodejs
+RUN apt-get update && \
+	apt-get -y install software-properties-common && \
+	add-apt-repository -y ppa:jonathonf/python-3.5 
+
+RUN apt-get update && \
+	apt-get install -y curl python3.5-dev python3-pip git sudo libpq-dev libffi-dev \
+		python3-psycopg2 postgresql-client-9.3 postgresql-contrib-9.3 postgresql-9.3 && \
+	update-alternatives --install /usr/bin/python python /usr/bin/python3.5 1 && \
+
+RUN curl -sL https://deb.nodesource.com/setup_4.x | bash - && \
+	apt-get -y install nodejs && \
+	update-alternatives --install /usr/bin/pip pip /usr/bin/pip3 1
+
+RUN locale-gen en_US.UTF-8 
+
+ENV LC_ALL=en_US.UTF-8
 
 
 # Install Lemur
@@ -28,7 +43,7 @@ RUN git config --global url."https://".insteadOf git:// &&\
   virtualenv venv &&\
   export PATH=/usr/local/src/lemur/venv/bin:${PATH} &&\
   pip install --upgrade pip virtualenv &&\
-  git checkout 0.4.0 &&\
+  git checkout 0.5.0 &&\
   make develop
 
 # Create static files
