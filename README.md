@@ -56,6 +56,7 @@ This project launches three containers:
 
 Externally, only lemur-nginx exposes any ports.  This container only exposes TCP 80.  See the [Issues](#Issues) section for an explanation of why TCP 443 was not exposed.
 
+Please note that as of Lemur 0.5 python2.7 is no longer supported. See the [Changelog](http://lemur.readthedocs.io/en/latest/changelog.html#id1) for details.
 
 Issues
 ------
