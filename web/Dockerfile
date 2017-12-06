@@ -12,44 +12,45 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM ubuntu:14.04
+FROM ubuntu:16.04
 MAINTAINER Netflix Open Source Development <talent@netflix.com>
 
 RUN apt-get update && \
-  apt-get -y install software-properties-common && \
-  add-apt-repository -y ppa:jonathonf/python-3.5
-
-RUN apt-get update && \
-  apt-get install -y curl python3.5-dev git sudo libpq-dev libffi-dev \
-    python3-psycopg2 postgresql-client-9.3 postgresql-contrib-9.3 && \
-  update-alternatives --install /usr/bin/python python /usr/bin/python3.5 1
-
-RUN curl -s https://bootstrap.pypa.io/get-pip.py | python
-
-RUN curl -sL https://deb.nodesource.com/setup_4.x | bash - && \
-  apt-get -y install nodejs make && \
-  update-alternatives --install /usr/bin/pip pip /usr/local/bin/pip 1
+  apt-get install -y curl git build-essential sudo \
+    python3 python3-pip python3-dev \
+    nodejs npm \
+    postgresql postgresql-contrib \
+    libpq-dev libssl-dev libffi-dev libsasl2-dev libldap2-dev && \
+  update-alternatives --install /usr/bin/python python /usr/bin/python3 1 && \
+  update-alternatives --install /usr/bin/pip pip /usr/bin/pip3 1 && \
+  update-alternatives --install /usr/bin/node node /usr/bin/nodejs 1 && \
+  apt-get clean -y && \
+  rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 RUN locale-gen en_US.UTF-8
 
 ENV LC_ALL=en_US.UTF-8
 
+ENV LEMUR_VERSION=master LEMUR_TARGET=develop
 
 # Install Lemur
 RUN git config --global url."https://".insteadOf git:// &&\
   cd /usr/local/src &&\
   git clone https://github.com/netflix/lemur.git &&\
   cd lemur &&\
-  git fetch &&\
+  git checkout ${LEMUR_VERSION} &&\
   pip install --upgrade virtualenv &&\
   virtualenv venv &&\
   export PATH=/usr/local/src/lemur/venv/bin:${PATH} &&\
   pip install --upgrade pip virtualenv &&\
-  git checkout 0.5.1 &&\
-  make develop
+  make ${LEMUR_TARGET}
+
+WORKDIR /usr/local/src/lemur
 
 # Create static files
-RUN cd /usr/local/src/lemur && npm install --unsafe-perm && node_modules/.bin/gulp build && node_modules/.bin/gulp package && rm -r bower_components node_modules
+RUN npm install --unsafe-perm && node_modules/.bin/gulp build && \
+  node_modules/.bin/gulp package && \
+  rm -r bower_components node_modules
 
 ADD lemur.conf.py /usr/local/src/lemur/lemur.conf.py
 ADD api-start.sh /usr/local/src/lemur/scripts/api-start.sh
