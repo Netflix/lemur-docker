@@ -1,5 +1,5 @@
-Lemur ZeroToDocker
-==================
+Lemur Docker
+============
 
 
 For full documentation, please see the [docs](https://lemur.readthedocs.org).
@@ -15,19 +15,7 @@ This repo utilizes docker compose to launch a cluster of containers to support t
 Starting
 --------
 
-Create a virtualbox vm *only needed for OS X
-
-> docker-machine create --driver virtualbox lemur
-
-Determine the environment
-
-> docker-machine env lemur
-
-Export the environment to bash
-
-> eval "$(docker-machine env lemur)"
-
-Start the conatiners
+Start the containers
 
 > docker-compose up
 
