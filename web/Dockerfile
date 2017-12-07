@@ -13,7 +13,7 @@
 # limitations under the License.
 
 FROM ubuntu:16.04
-MAINTAINER Netflix Open Source Development <talent@netflix.com>
+LABEL maintainer="Netflix Open Source Development <talent@netflix.com>"
 
 RUN apt-get update && \
   apt-get install -y curl git build-essential sudo \
