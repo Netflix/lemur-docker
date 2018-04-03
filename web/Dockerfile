@@ -43,6 +43,8 @@ RUN git config --global url."https://".insteadOf git:// &&\
   virtualenv venv &&\
   export PATH=/usr/local/src/lemur/venv/bin:${PATH} &&\
   pip install --upgrade pip virtualenv &&\
+  virtualenv -p python3 lemur &&\
+  . lemur/bin/activate &&\
   make ${LEMUR_TARGET}
 
 WORKDIR /usr/local/src/lemur
