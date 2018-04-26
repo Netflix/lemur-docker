@@ -39,12 +39,10 @@ RUN git config --global url."https://".insteadOf git:// &&\
   git clone https://github.com/netflix/lemur.git &&\
   cd lemur &&\
   git checkout ${LEMUR_VERSION} &&\
-  pip install --upgrade virtualenv &&\
-  virtualenv venv &&\
-  export PATH=/usr/local/src/lemur/venv/bin:${PATH} &&\
   pip install --upgrade pip virtualenv &&\
-  virtualenv -p python3 lemur &&\
-  . lemur/bin/activate &&\
+  export PATH=/usr/local/src/lemur/venv/bin:${PATH} &&\
+  virtualenv -p python3 venv &&\
+  . venv/bin/activate &&\
   make ${LEMUR_TARGET}
 
 WORKDIR /usr/local/src/lemur
