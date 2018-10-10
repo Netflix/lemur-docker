@@ -1,6 +1,8 @@
 Lemur Docker
 ============
 
+This project is not actively updated and is currently in maintenance mode.
+
 For full documentation, please see the [docs](https://lemur.readthedocs.org).
 
 This repo utilizes docker compose to launch a cluster of containers to support the Lemur project.  This is only meant to be used to **play**.  See the [Issues](#Issues) section for information regarding productionalizing these containers.
