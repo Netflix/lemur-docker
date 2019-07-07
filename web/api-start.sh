@@ -30,7 +30,7 @@ wait_db
 echo "Creating lemurdb..."
 sudo -u postgres psql -h postgres --command "CREATE DATABASE lemur;"
 echo "Creating the lemur user..."
-sudo -u postgres psql -h postgres --command "CREATE USER lemur WITH PASSWORD 'lemur';"
+sudo -u postgres psql -h postgres --command "CREATE USER lemur WITH SUPERUSER PASSWORD 'lemur';"
 echo "Changing postgres password..."
 sudo -u postgres psql -h postgres --command "GRANT ALL PRIVILEGES ON DATABASE lemur to lemur;"
 echo "Done changing postgres password..."
