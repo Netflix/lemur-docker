@@ -34,6 +34,7 @@ sudo -u postgres psql -h postgres --command "CREATE USER lemur WITH PASSWORD 'le
 echo "Changing postgres password..."
 sudo -u postgres psql -h postgres --command "GRANT ALL PRIVILEGES ON DATABASE lemur to lemur;"
 echo "Done changing postgres password..."
+sudo -u postgres psql -h postgres --command "ALTER ROLE lemur SUPERUSER;"
 echo "DONE CREATING lemurdb..."
 
 cd /usr/local/src/lemur/lemur
