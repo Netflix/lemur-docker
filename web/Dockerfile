@@ -17,11 +17,15 @@ LABEL maintainer="Netflix Open Source Development <talent@netflix.com>"
 
 ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && \
+apt-get install -y software-properties-common && \
+add-apt-repository ppa:deadsnakes/ppa -y && \
+  apt-get update && \
   apt-get install -y curl git build-essential sudo \
-    python3 python3-pip python3-dev \
+    python3.6 python3-pip python3.6-dev \
     nodejs npm \
     postgresql postgresql-contrib \
-    libpq-dev libffi-dev libsasl2-dev libldap2-dev && \
+    libpq-dev libssl-dev libffi-dev libsasl2-dev libldap2-dev && \
+  ln -sf /usr/bin/python3.6 /usr/local/bin/python3 && \
   update-alternatives --install /usr/bin/python python /usr/bin/python3 1 && \
   update-alternatives --install /usr/bin/pip pip /usr/bin/pip3 1 && \
   update-alternatives --install /usr/bin/node node /usr/bin/nodejs 1 && \
