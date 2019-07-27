@@ -12,9 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM ubuntu:16.04
+FROM ubuntu:18.04
 LABEL maintainer="Netflix Open Source Development <talent@netflix.com>"
 
+ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && \
 apt-get install -y software-properties-common && \
 add-apt-repository ppa:deadsnakes/ppa -y && \
