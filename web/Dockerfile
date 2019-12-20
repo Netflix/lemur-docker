@@ -24,7 +24,7 @@ add-apt-repository ppa:deadsnakes/ppa -y && \
     python3.6 python3-pip python3.6-dev \
     nodejs npm \
     postgresql postgresql-contrib \
-    libpq-dev libssl-dev libffi-dev libsasl2-dev libldap2-dev && \
+    libpq-dev libssl1.0-dev libffi-dev libsasl2-dev libldap2-dev && \
   ln -sf /usr/bin/python3.6 /usr/local/bin/python3 && \
   update-alternatives --install /usr/bin/python python /usr/bin/python3 1 && \
   update-alternatives --install /usr/bin/pip pip /usr/bin/pip3 1 && \
