@@ -17,7 +17,7 @@ db_not_ready() {
 wait_db() {
     for i in $(seq 1 10); do
         echo -e "\033[1mAttempt to connect to db.. try #$i\033[0m"
-        sudo -u postgres psql -h postgres --command 'select 1;' && return 0
+        sudo -u postgres PGPASSWORD=lemur psql -U lemur -h postgres --command 'select 1;' && return 0
         sleep $SLEEP
     done
     return 1
@@ -26,16 +26,6 @@ echo "Waiting for db to become available"
 wait_db
 [ "x$?" == "x0" ] && printf "db ready!\n\n" || db_not_ready
 
-
-echo "Creating lemurdb..."
-sudo -u postgres psql -h postgres --command "CREATE DATABASE lemur;"
-echo "Creating the lemur user..."
-sudo -u postgres psql -h postgres --command "CREATE USER lemur WITH SUPERUSER PASSWORD 'lemur';"
-echo "Changing postgres password..."
-sudo -u postgres psql -h postgres --command "GRANT ALL PRIVILEGES ON DATABASE lemur to lemur;"
-echo "Done changing postgres password..."
-sudo -u postgres psql -h postgres --command "ALTER ROLE lemur SUPERUSER;"
-echo "DONE CREATING lemurdb..."
 
 cd /usr/local/src/lemur/lemur
 
