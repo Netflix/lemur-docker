@@ -1,0 +1,14 @@
+POSTGRES_USER=lemur
+POSTGRES_PASSWORD=12345
+POSTGRES_DB=lemur
+POSTGRES_HOST=postgres
+#POSTGRES_PORT=<defaults to 5432>
+#POSTGRES_DUMP_HOST=
+#POSTGRES_DUMP_PORT=<defaults to POSTGRES_PORT>
+#POSTGRES_DUMP_DB=<defaults to POSTGRES_DB>
+#POSTGRES_DUMP_USER=<defaults to POSTGRES_USER>
+#POSTGRES_DUMP_PASSWORD=
+# Set POSTGRES_DB_MODE=load-from-dump to dump the above configured DB (by default, dev) and load it locally
+# Set POSTGRES_DB_MODE=init to initialize a brand new DB
+# Leave POSTGRES_DB_MODE unset to use the existing DB on the volume (this is the default, as this should be standard since the volume is persistent)
+POSTGRES_DB_MODE=init
