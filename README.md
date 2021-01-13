@@ -93,7 +93,7 @@ The username for the Lemur web UI is `lemur` and the default password is `admin`
 ### Default Config
 
 This comes with a default `lemur.conf.py`.
-Things like encryption keys and tokens have been randomized in these **should** be generated and persisted securely for anything other than experimentation.
+Things like encryption keys and tokens have been randomized in these configs, and **should** instead be generated and persisted securely for anything other than experimentation.
 
 ### Default credentials on the postgres database
 

@@ -22,7 +22,7 @@ def get_random_secret(length):
     secret_key = secret_key + ''.join(random.choice(string.ascii_lowercase) for x in range(round(length / 4)))
     return secret_key + ''.join(random.choice(string.digits) for x in range(round(length / 4)))
 
-# this is the secret key used by flask session management
+# This is the secret key used by Flask session management
 SECRET_KEY = repr(os.environ.get('SECRET_KEY', get_random_secret(32).encode('utf8')))
 
 # You should consider storing these separately from your config
@@ -40,6 +40,7 @@ CELERY_RESULT_BACKEND = 'redis://docker.for.mac.localhost:6379'
 CELERY_BROKER_URL = 'redis://docker.for.mac.localhost:6379'
 CELERY_IMPORTS = ('lemur.common.celery')
 CELERYBEAT_SCHEDULE = {
+    # All tasks are disabled by default. Enable any tasks you wish to run.
     # 'fetch_all_pending_acme_certs': {
     #     'task': 'lemur.common.celery.fetch_all_pending_acme_certs',
     #     'options': {
@@ -52,22 +53,22 @@ CELERYBEAT_SCHEDULE = {
     #     'options': {
     #         'expires': 180
     #     },
-    #     'schedule': crontab(hour=7, minute=30, day_of_week=1),
+    #     'schedule': crontab(hour=8, minute=0, day_of_week=5),
     # },
     # 'clean_all_sources': {
     #     'task': 'lemur.common.celery.clean_all_sources',
     #     'options': {
     #         'expires': 180
     #     },
-    #     'schedule': crontab(hour=1, minute=0, day_of_week=1),
+    #     'schedule': crontab(hour=5, minute=0, day_of_week=5),
     # },
     # 'sync_all_sources': {
     #     'task': 'lemur.common.celery.sync_all_sources',
     #     'options': {
     #         'expires': 180
     #     },
-    #     'schedule': crontab(hour="*/2", minute=5),
-    #     # this job is running 25min before endpoints_expire which deletes endpoints which were not updated
+    #     'schedule': crontab(hour="*/2", minute=0),
+    #     # this job is running 30min before endpoints_expire which deletes endpoints which were not updated
     # },
     # 'sync_source_destination': {
     #     'task': 'lemur.common.celery.sync_source_destination',
@@ -88,14 +89,14 @@ CELERYBEAT_SCHEDULE = {
     #     'options': {
     #         'expires': 180
     #     },
-    #     'schedule': crontab(hour="18", minute=0),
+    #     'schedule': crontab(hour=9, minute=0),
     # },
     # 'certificate_rotate': {
     #     'task': 'lemur.common.celery.certificate_rotate',
     #     'options': {
     #         'expires': 180
     #     },
-    #     'schedule': crontab(hour="19", minute=0),
+    #     'schedule': crontab(hour=10, minute=0),
     # },
     # 'endpoints_expire': {
     #     'task': 'lemur.common.celery.endpoints_expire',
@@ -103,7 +104,7 @@ CELERYBEAT_SCHEDULE = {
     #         'expires': 180
     #     },
     #     'schedule': crontab(hour="*/2", minute=30),
-    #     # this job is running 25min after sync_all_sources which updates endpoints
+    #     # this job is running 30min after sync_all_sources which updates endpoints
     # },
     # 'get_all_zones': {
     #     'task': 'lemur.common.celery.get_all_zones',
@@ -117,29 +118,35 @@ CELERYBEAT_SCHEDULE = {
     #     'options': {
     #         'expires': 180
     #     },
-    #     'schedule': crontab(hour="21", minute=0),
+    #     'schedule': crontab(hour=10, minute=0),
     # }
-    # This shall not run in TEST, due to imported certificates and the conflicting auto-rotate
-    #    'enable_autorotate_for_certs_attached_to_endpoint': {
-    #        'task': 'lemur.common.celery.enable_autorotate_for_certs_attached_to_endpoint',
-    #        'options': {
-    #            'expires': 180
-    #        },
-    #        'schedule': crontab(hour="20", minute=0),
-    #    }
+    # 'enable_autorotate_for_certs_attached_to_endpoint': {
+    #     'task': 'lemur.common.celery.enable_autorotate_for_certs_attached_to_endpoint',
+    #     'options': {
+    #         'expires': 180
+    #     },
+    #     'schedule': crontab(hour=10, minute=0),
+    # }
     # 'notify_expirations': {
     #     'task': 'lemur.common.celery.notify_expirations',
     #     'options': {
     #         'expires': 180
     #     },
-    #     'schedule': crontab(minute="*"),
+    #     'schedule': crontab(hour=10, minute=0),
     #  },
     # 'notify_authority_expirations': {
     #     'task': 'lemur.common.celery.notify_authority_expirations',
     #     'options': {
     #         'expires': 180
     #     },
-    #     'schedule': crontab(minute="*"),
+    #     'schedule': crontab(hour=10, minute=0),
+    # },
+    # 'send_security_expiration_summary': {
+    #     'task': 'lemur.common.celery.send_security_expiration_summary',
+    #     'options': {
+    #         'expires': 180
+    #     },
+    #     'schedule': crontab(hour=10, minute=0, day_of_week='mon-fri'),
     # }
 }
 CELERY_TIMEZONE = 'UTC'
@@ -171,14 +178,11 @@ LEMUR_DEFAULT_COUNTRY = str(os.environ.get('LEMUR_DEFAULT_COUNTRY','US'))
 LEMUR_DEFAULT_STATE = str(os.environ.get('LEMUR_DEFAULT_STATE','California'))
 LEMUR_DEFAULT_LOCATION = str(os.environ.get('LEMUR_DEFAULT_LOCATION','Los Gatos'))
 LEMUR_DEFAULT_ORGANIZATION = str(os.environ.get('LEMUR_DEFAULT_ORGANIZATION','Example, Inc.'))
-LEMUR_DEFAULT_ORGANIZATIONAL_UNIT = str(os.environ.get('LEMUR_DEFAULT_ORGANIZATIONAL_UNIT','Example'))
+LEMUR_DEFAULT_ORGANIZATIONAL_UNIT = str(os.environ.get('LEMUR_DEFAULT_ORGANIZATIONAL_UNIT',''))
 
-LEMUR_DEFAULT_AUTHORITY = str(os.environ.get('LEMUR_DEFAULT_AUTHORITY','DigiCertInc'))
+LEMUR_DEFAULT_AUTHORITY = str(os.environ.get('LEMUR_DEFAULT_AUTHORITY','ExampleCa'))
 
 LEMUR_DEFAULT_ROLE = 'operator'
-
-# this is a list of domains as regexes that only admins can issue
-LEMUR_RESTRICTED_DOMAINS = []
 
 ACTIVE_PROVIDERS = []
 METRIC_PROVIDERS = []
@@ -230,4 +234,4 @@ ACME_DNS_PROVIDER_TYPES = {"items": [
 ]}
 
 # Authority plugins which support revocation
-SUPPORTED_REVOCATION_AUTHORITY_PLUGINS = ['digicert-cis-issuer', 'acme-issuer']
+SUPPORTED_REVOCATION_AUTHORITY_PLUGINS = ['acme-issuer']
