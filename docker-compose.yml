@@ -1,33 +1,46 @@
-lemur-web:
-  restart: always
-  build: ./web
-  expose:
-    - "8000"
-  links:
-    - postgres:postgres
-  volumes:
-    - /usr/local/src/lemur/lemur/static/dist
-  environment:
-    DEBUG: 'False'
-    LEMUR_CONF: /usr/local/src/lemur/lemur.conf.py
-lemur-nginx:
-  restart: always
-  build: ./nginx/
-  ports:
-    - "80:80"
-    - "443:443"
-  volumes_from:
-    - lemur-web
-  links:
-    - lemur-web
-    - lemur-web:web
+version: '3'
 
-postgres:
-  restart: always
-  image: postgres:latest
-  ports:
-    - "5432:5432"
-  environment:
-    POSTGRES_USER: lemur
-    POSTGRES_PASSWORD: lemur
-    POSTGRES_DB: lemur
+services:
+  postgres:
+    image: "postgres"
+    restart: always
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    env_file:
+      - pgsql-env
+    ports:
+      - 5432:5432
+    healthcheck:
+      test: ["CMD-SHELL", "PGPASSWORD=$${POSTGRES_PASSWORD} psql -U $${POSTGRES_USER} -h $${POSTGRES_HOST} --command 'select 1;' && return 0"]
+      interval: 1s
+      timeout: 5s
+      retries: 5
+  lemur:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    env_file:
+      - lemur-env
+      - pgsql-env
+    volumes:
+      - type: bind
+        source: ./lemur.conf.py
+        target: /home/lemur/.lemur/lemur.conf.py
+        read_only: true
+    ports:
+      - 87:80
+      - 447:443
+  redis:
+    image: "redis:latest"
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli PING"]
+      interval: 1s
+      timeout: 5s
+      retries: 5
+volumes:
+    pg_data: {}

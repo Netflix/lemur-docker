@@ -1,104 +1,104 @@
 Lemur Docker
 ============
 
-This project is not actively updated and is currently in maintenance mode.
+For full documentation on Lemur, please see the [docs](https://lemur.readthedocs.org).
 
-For full documentation, please see the [docs](https://lemur.readthedocs.org).
+This repo utilizes docker compose to launch a cluster of containers to support development of the Lemur project. This is only meant for development and testing, not for production. See the [Issues](#Issues) section for information regarding productionalizing these containers.
 
-This repo utilizes docker compose to launch a cluster of containers to support the Lemur project.  This is only meant to be used to **play**.  See the [Issues](#Issues) section for information regarding productionalizing these containers.
+This project builds the _current state_ of a checked out lemur repository subdirectory, meaning you may make changes and rebuild your container to pick them up. It also has the ability to dump and load another database, in case you want to test with a copy of a real Lemur DB. Alternatively, it has the option to initialize an empty database. Celery tasks will also run, if you choose to enable them.
 
-----------
 
 Requirements
 ------------
 
--   Latest version of [Docker Toolbox](https://www.docker.com/toolbox)
--   Terminal with all docker env variables set
+- Latest version of [Docker Engine](https://docs.docker.com/engine/install/) - minimum version 20
+- Latest version of [Docker Compose](https://docs.docker.com/compose/install/) - minimum version 1.27
 
 Starting
 --------
 
-Start the containers
+Check out the lemur-docker and lemur repos:
 
-> docker-compose up
+    git clone git@github.com:Netflix/lemur-docker.git
+    cd lemur-docker
+    git clone git@github.com:Netflix/lemur.git
 
-Get the ip to connect to
+Start the containers:
 
-> docker-machine ip lemur
+    docker-compose up
 
 Stopping
 --------
 
-> docker-compose stop
+    docker-compose stop
 
 Try It Out
 ----------
 
-Launch web browser and connect to your docker container's IP over https. 
-The default credientials are `lemur/password`
+Launch web browser and connect to your docker container at https://localhost:447. The default credentials are `lemur/admin`.
 
 Architecture
 -------------
 
 This project launches three containers:
 
-1.  postgres:latest
-2.  lemur-nginx:0.2.0
-3.  lemur-web:0.2.0
+1. postgres
+2. redis
+2. lemur
 
-Externally, only lemur-nginx exposes any ports. This container exposes TCP 80 and 443.
+Externally, only `lemur` exposes any ports. This container exposes TCP 87 and 447. We use standard ports to avoid conflicts.
 
-The lemur-web container can be altered by the following env vars:
+The `lemur` container is built on a local copy of the Lemur code. It runs three processes via `supervisord`:
 
--   `LEMUR_VERSION` (default value: `master`)
-    Which branch / tag to build
--   `LEMUR_TARGET` (default version: `develop`)
-    Which target to build.
-    Recommended values are
-    -   `develop`
-    -   `release`
+- nginx
+- lemur
+- lemur-celery
 
-Please note that as of Lemur 0.5 python2.7 is no longer supported. See the [Changelog](http://lemur.readthedocs.io/en/latest/changelog.html#id1) for details.
+The file `entrypoint` is used to perform setup and initialization both for postgres and lemur within the `lemur` container.
+
+Note that then `lemur` subdirectory is git ignored, so you may make changes to the lemur repository without causing any changes to show up in `lemur-docker`.
+
+Configuration
+-------------
+
+*Lemur configuration*
+Lemur configuration can happen in two places:
+ - `lemur-env` can be used for a few basic configuration overrides
+ - `lemur.conf.py` must be used for any configuration that requires Python execution, and any options not available in `lemur-env`
+
+Note that by defauly, the Celery process is running, but all Celery tasks are disabled. If you wish to enable a Celery task, it should be done in `lemur.conf.py`.
+
+`lemur.conf.py` is mounted on the container, so all you need to do to update these settings is to make the desired changes and restart the containers:
+    
+        docker-compose stop
+        docker-compose start
+
+Your changes should now be reflected in Lemur.
+
+*Database configuration*
+This Docker configuration includes three ways to run the database, controlled via the option `POSTGRES_DB_MODE` in `pgsql-env`:
+- `init` will create a brand new Lemur database, initialized with base data
+- `load-frum-dump` will use specified DB info to dump another database and load it into the container database (see `pgsql-env` for config options)
+- blank/not set will reuse whatever data already exists in the volume `lemur-docker_pg_data`
+
+Note that the `init` and `load-from-dump` options will drop whatever data is already in the volume. Aside from those, explicitly deleting the Docker volume will also delete all data. Otherwise, the volume is persistent and should contain persistent data across multiple runs of the Docker container.
 
 Issues
 ------
 
 ### Default credentials on the web UI
 
-The username for the Lemur web UI is `lemur` and the default password is `password`. You may create new users and disable this service account after the apps has been launched.  
+The username for the Lemur web UI is `lemur` and the default password is `admin` (unless overriden by environment variable `LEMUR_ADMIN_PASSWORD`). You may create new users and disable this service account after the apps has been launched.  
 
 ### Default Config
 
-This comes with a default `lemur.conf.py` located under the [`web/`](web/) dir of this repository.
-Things like encryption keys and tokens have been filled in these **should** be changed for anything other than experimentation.
-
-There are 2 recommended ways of updating these settings:
-
-1.  Mounting your own settings
-    
-    In [`docker-compose.yml`](docker-compose.yml), add a line like `<path/to/lemur.conf.py>:/usr/local/src/lemur/lemur.conf.py` under `lemur-web.volumes`
-    where `<path/to/lemur.conf.py>` is the path to your custom `lemur.conf.py` file.
-    
-    Then you simply restart the containers:
-    
-        docker-compose start
-    
-2.  Rebuilding image with new settings
-    
-    Update the file [`web/lemur.conf.py`](web/lemur.conf.py), and rebuild your image files:
-    
-        docker-compose build lemur-web
-    
-    Then execute:
-    
-        docker-compose stop
-    
-    and
-    
-    > docker-compose up
-
-Your changes should now be reflected in Lemur.
+This comes with a default `lemur.conf.py`.
+Things like encryption keys and tokens have been randomized in these configs, and **should** instead be generated and persisted securely for anything other than experimentation.
 
 ### Default credentials on the postgres database
 
-The username for the postgres database is `lemur`.  The password for this database is actually set in the api-start.sh file found within the lemur-web container.  This password is set to `lemur`.
+The username for the postgres database is `lemur` and the default password is `12345` (located in `pgsql-env`).
+
+### Untrusted web certificate
+
+The certificate used by nginx to serve Lemur in the container is self-signed and untrusted. You would need to use a trusted certificate if you were to run this for anything other than experimentation.
