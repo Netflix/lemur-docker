@@ -33,11 +33,11 @@ LEMUR_ENCRYPTION_KEYS = repr(os.environ.get('LEMUR_ENCRYPTION_KEYS',
                                             base64.b64encode(get_random_secret(32).encode('utf8')).decode('utf8')))
 
 
-REDIS_HOST = 'docker.for.mac.localhost'
+REDIS_HOST = 'redis'
 REDIS_PORT = 6379
 REDIS_DB = 0
-CELERY_RESULT_BACKEND = 'redis://docker.for.mac.localhost:6379'
-CELERY_BROKER_URL = 'redis://docker.for.mac.localhost:6379'
+CELERY_RESULT_BACKEND = f'redis://{REDIS_HOST}:{REDIS_PORT}'
+CELERY_BROKER_URL = f'redis://{REDIS_HOST}:{REDIS_PORT}'
 CELERY_IMPORTS = ('lemur.common.celery')
 CELERYBEAT_SCHEDULE = {
     # All tasks are disabled by default. Enable any tasks you wish to run.
