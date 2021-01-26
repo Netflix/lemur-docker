@@ -17,15 +17,6 @@ export SQLALCHEMY_DATABASE_URI="postgresql://$POSTGRES_USER:$POSTGRES_PASSWORD@$
 echo "# Verifying postgres connectivity"
 PGPASSWORD=$POSTGRES_PASSWORD psql -h $POSTGRES_HOST -p $POSTGRES_PORT -U $POSTGRES_USER -d $POSTGRES_DB --command 'select 1;'
 
-if [ -z "${SKIP_SSL}" ]; then
-  # TODO can we make this cert something that the local browser will actually trust?
-  if [ ! -f /etc/nginx/ssl/server.crt ] && [ ! -f /etc/nginx/ssl/server.key ]; then
-    openssl req -x509 -newkey rsa:4096 -nodes -keyout /etc/nginx/ssl/server.key -out /etc/nginx/ssl/server.crt -days 365 -subj "/C=US/ST=FAKE/L=FAKE/O=FAKE/OU=FAKE/CN=FAKE"
-  fi
-  [ -f "/etc/nginx/conf.d/default-ssl.conf.a" ] && mv /etc/nginx/conf.d/default-ssl.conf.a /etc/nginx/conf.d/default-ssl.conf
-  [ -f "/etc/nginx/conf.d/default.conf" ] && mv -f /etc/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf.a
-fi
-
 if [ "${POSTGRES_DB_MODE}" = "load-from-dump" ]; then
 	echo " # Initializing DB with dump from existing database"
 	echo " # Dropping and re-creating DB ${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB} with user ${POSTGRES_USER}"
@@ -48,7 +39,7 @@ elif [ "${POSTGRES_DB_MODE}" = "init" ]; then
 	PGPASSWORD=$POSTGRES_PASSWORD dropdb -h $POSTGRES_HOST -p $POSTGRES_PORT -U $POSTGRES_USER $POSTGRES_DB --if-exists
 	PGPASSWORD=$POSTGRES_PASSWORD createdb -h $POSTGRES_HOST -p $POSTGRES_PORT -U $POSTGRES_USER $POSTGRES_DB -T template0
 	cd /opt/lemur/lemur
-	python3 /opt/lemur/lemur/manage.py --config=/home/lemur/.lemur/lemur.conf.py init -p "${LEMUR_ADMIN_PASSWORD}"
+	/opt/venv/bin/python3 /opt/lemur/lemur/manage.py --config=/home/lemur/.lemur/lemur.conf.py init -p "${LEMUR_ADMIN_PASSWORD}"
 	echo " # Lemur has been initialized with admin username 'lemur' and the specified password"
 else
 	echo " # POSTGRES_DB_MODE was neither 'load-from-dump' nor 'init', so will use existing database"

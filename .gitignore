@@ -1,1 +1,4 @@
-lemur
+lemur-build-docker/lemur
+.idea
+/.lemur.env
+/.pgsql.env

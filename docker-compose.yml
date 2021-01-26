@@ -1,32 +1,46 @@
-version: '3'
-
-services:
-  postgres:
-    image: "postgres"
-    restart: always
-    volumes:
-      - pg_data:/var/lib/postgresql/data
-    env_file:
-      - pgsql-env
-    ports:
-      - 5432:5432
-  lemur:
-    build:
-      context: ./
-      dockerfile: Dockerfile
-    depends_on:
-      - postgres
-      - redis
-    env_file:
-      - lemur-env
-      - pgsql-env
-    volumes:
-      - ./lemur.conf.py:/home/lemur/.lemur/lemur.conf.py:ro
-    ports:
-      - 87:80
-      - 447:443
-  redis:
-    image: "redis:latest"
+version: '3.7'
 
 volumes:
   pg_data: { }
+  app_data: { }
+
+services:
+  postgres:
+    image: "postgres:13.1-alpine"
+    restart: on-failure
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    env_file:
+      - .pgsql.env
+
+  redis:
+    image: "redis:alpine3.12"
+    restart: on-failure
+
+  nginx:
+    build:
+      context: ./nginx
+    container_name: lemur-nginx
+    volumes:
+      - app_data:/opt/lemur/lemur/static/dist:ro
+    restart: on-failure
+    ports:
+      - 87:80
+      - 447:443
+
+  lemur:
+    image: netlix-lemur:latest
+    build:
+      context: ./lemur-build-docker
+    container_name: lemur
+    restart: on-failure
+    depends_on:
+      - postgres
+      - redis
+      - nginx
+    env_file:
+      - .lemur.env
+      - .pgsql.env
+    volumes:
+      - ./lemur.conf.py:/home/lemur/.lemur/lemur.conf.py:ro
+      - app_data:/opt/lemur/lemur/static/dist:ro
