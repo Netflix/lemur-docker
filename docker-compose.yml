@@ -10,37 +10,23 @@ services:
       - pgsql-env
     ports:
       - 5432:5432
-    healthcheck:
-      test: ["CMD-SHELL", "PGPASSWORD=$${POSTGRES_PASSWORD} psql -U $${POSTGRES_USER} -h $${POSTGRES_HOST} --command 'select 1;' && return 0"]
-      interval: 1s
-      timeout: 5s
-      retries: 5
   lemur:
     build:
       context: ./
       dockerfile: Dockerfile
     depends_on:
-      postgres:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
+      - postgres
+      - redis
     env_file:
       - lemur-env
       - pgsql-env
     volumes:
-      - type: bind
-        source: ./lemur.conf.py
-        target: /home/lemur/.lemur/lemur.conf.py
-        read_only: true
+      - ./lemur.conf.py:/home/lemur/.lemur/lemur.conf.py:ro
     ports:
       - 87:80
       - 447:443
   redis:
     image: "redis:latest"
-    healthcheck:
-      test: ["CMD-SHELL", "redis-cli PING"]
-      interval: 1s
-      timeout: 5s
-      retries: 5
+
 volumes:
-    pg_data: {}
+  pg_data: { }
