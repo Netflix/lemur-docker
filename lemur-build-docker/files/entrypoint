@@ -43,6 +43,9 @@ elif [ "${POSTGRES_DB_MODE}" = "init" ]; then
 	echo " # Lemur has been initialized with admin username 'lemur' and the specified password"
 else
 	echo " # POSTGRES_DB_MODE was neither 'load-from-dump' nor 'init', so will use existing database"
+	# for first time use, init should not touched exists data
+	cd /opt/lemur/lemur
+	/opt/venv/bin/python3 /opt/lemur/lemur/manage.py --config=/home/lemur/.lemur/lemur.conf.py init -p "${LEMUR_ADMIN_PASSWORD}"
 fi
 
 echo " # Creating Postgres trgm extension"
