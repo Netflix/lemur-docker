@@ -9,18 +9,20 @@ _basedir = os.path.abspath(os.path.dirname(__file__))
 
 # See the Lemur docs (https://lemur.readthedocs.org) for more information on configuration
 
-LOG_LEVEL = str(os.environ.get('LOG_LEVEL','DEBUG'))
-LOG_FILE = str(os.environ.get('LOG_FILE','/home/lemur/.lemur/lemur.log'))
+LOG_LEVEL = str(os.environ.get('LOG_LEVEL', 'DEBUG'))
+LOG_FILE = str(os.environ.get('LOG_FILE', '/home/lemur/.lemur/lemur.log'))
 LOG_JSON = True
 
 CORS = os.environ.get("CORS") == "True"
 debug = os.environ.get("DEBUG") == "True"
+
 
 def get_random_secret(length):
     secret_key = ''.join(random.choice(string.ascii_uppercase) for x in range(round(length / 4)))
     secret_key = secret_key + ''.join(random.choice("~!@#$%^&*()_+") for x in range(round(length / 4)))
     secret_key = secret_key + ''.join(random.choice(string.ascii_lowercase) for x in range(round(length / 4)))
     return secret_key + ''.join(random.choice(string.digits) for x in range(round(length / 4)))
+
 
 # This is the secret key used by Flask session management
 SECRET_KEY = repr(os.environ.get('SECRET_KEY', get_random_secret(32).encode('utf8')))
@@ -31,7 +33,6 @@ LEMUR_TOKEN_SECRET = repr(os.environ.get('LEMUR_TOKEN_SECRET',
 # This must match the key for whichever DB the container is using - this could be a dump of dev or test, or a unique key
 LEMUR_ENCRYPTION_KEYS = repr(os.environ.get('LEMUR_ENCRYPTION_KEYS',
                                             base64.b64encode(get_random_secret(32).encode('utf8')).decode('utf8')))
-
 
 REDIS_HOST = 'redis'
 REDIS_PORT = 6379
@@ -152,7 +153,7 @@ CELERYBEAT_SCHEDULE = {
 CELERY_TIMEZONE = 'UTC'
 
 SQLALCHEMY_ENABLE_FLASK_REPLICATED = False
-SQLALCHEMY_DATABASE_URI = os.environ.get('SQLALCHEMY_DATABASE_URI','postgresql://lemur:lemur@localhost:5432/lemur')
+SQLALCHEMY_DATABASE_URI = os.environ.get('SQLALCHEMY_DATABASE_URI', 'postgresql://lemur:lemur@localhost:5432/lemur')
 
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 SQLALCHEMY_ECHO = True
@@ -173,14 +174,13 @@ DEFAULT_VALIDITY_DAYS = 365
 
 LEMUR_OWNER_EMAIL_IN_SUBJECT = False
 
+LEMUR_DEFAULT_COUNTRY = str(os.environ.get('LEMUR_DEFAULT_COUNTRY', 'US'))
+LEMUR_DEFAULT_STATE = str(os.environ.get('LEMUR_DEFAULT_STATE', 'California'))
+LEMUR_DEFAULT_LOCATION = str(os.environ.get('LEMUR_DEFAULT_LOCATION', 'Los Gatos'))
+LEMUR_DEFAULT_ORGANIZATION = str(os.environ.get('LEMUR_DEFAULT_ORGANIZATION', 'Example, Inc.'))
+LEMUR_DEFAULT_ORGANIZATIONAL_UNIT = str(os.environ.get('LEMUR_DEFAULT_ORGANIZATIONAL_UNIT', ''))
 
-LEMUR_DEFAULT_COUNTRY = str(os.environ.get('LEMUR_DEFAULT_COUNTRY','US'))
-LEMUR_DEFAULT_STATE = str(os.environ.get('LEMUR_DEFAULT_STATE','California'))
-LEMUR_DEFAULT_LOCATION = str(os.environ.get('LEMUR_DEFAULT_LOCATION','Los Gatos'))
-LEMUR_DEFAULT_ORGANIZATION = str(os.environ.get('LEMUR_DEFAULT_ORGANIZATION','Example, Inc.'))
-LEMUR_DEFAULT_ORGANIZATIONAL_UNIT = str(os.environ.get('LEMUR_DEFAULT_ORGANIZATIONAL_UNIT',''))
-
-LEMUR_DEFAULT_AUTHORITY = str(os.environ.get('LEMUR_DEFAULT_AUTHORITY','ExampleCa'))
+LEMUR_DEFAULT_AUTHORITY = str(os.environ.get('LEMUR_DEFAULT_AUTHORITY', 'ExampleCa'))
 
 LEMUR_DEFAULT_ROLE = 'operator'
 

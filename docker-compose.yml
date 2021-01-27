@@ -1,32 +1,59 @@
-version: '3'
+version: '3.7'
+
+volumes:
+  pg_data: { }
+  app_data: { }
+
+networks:
+  appnet:
+    driver: bridge
 
 services:
   postgres:
-    image: "postgres"
-    restart: always
+    image: "postgres:13.1-alpine"
+    restart: on-failure
+    networks:
+      - appnet
     volumes:
       - pg_data:/var/lib/postgresql/data
     env_file:
-      - pgsql-env
-    ports:
-      - 5432:5432
-  lemur:
+      - .pgsql.env
+
+  redis:
+    image: "redis:alpine3.12"
+    restart: on-failure
+    networks:
+      - appnet
+
+  nginx:
     build:
-      context: ./
-      dockerfile: Dockerfile
+      context: ./nginx
+    container_name: lemur-nginx
+    networks:
+      - appnet
+    volumes:
+      - app_data:/opt/lemur/lemur/static/dist:ro
+    restart: on-failure
+    depends_on:
+      - lemur
+    ports:
+      - 87:80
+      - 447:443
+
+  lemur:
+    image: netlix-lemur:latest
+    build:
+      context: ./lemur-build-docker
+    container_name: lemur
+    restart: on-failure
+    networks:
+      - appnet
     depends_on:
       - postgres
       - redis
     env_file:
-      - lemur-env
-      - pgsql-env
+      - .lemur.env
+      - .pgsql.env
     volumes:
       - ./lemur.conf.py:/home/lemur/.lemur/lemur.conf.py:ro
-    ports:
-      - 87:80
-      - 447:443
-  redis:
-    image: "redis:latest"
-
-volumes:
-  pg_data: { }
+      - app_data:/opt/lemur/lemur/static/dist:ro
