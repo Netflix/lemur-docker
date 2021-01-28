@@ -18,15 +18,36 @@ Requirements
 
 - Latest version of [Docker Engine](https://docs.docker.com/engine/install/) - minimum version 20
 - Latest version of [Docker Compose](https://docs.docker.com/compose/install/) - minimum version 1.27
+- Make (optional)
 
-Starting
---------
+Prepare
+------------
 
-Check out the lemur-docker and lemur repos and make a local copy of the config files:
+Check out the current repo:
 ```bash
 git clone git@github.com:Netflix/lemur-docker.git
 cd lemur-docker
-git clone git@github.com:Netflix/lemur.git lemur-build-docker/lemur
+```   
+
+Starting
+------------
+
+One `magic` command for all things that you need:
+```bash
+make
+``` 
+NOTE: all containers running in background  by default
+NOTE: make automatically resolves access rights to the docker. If we haven't start containers with `sudo`.   
+NOTE: make commands tested on Linux and Mac. If you have any suggestion how it can be improved for Windows, feel free to 
+make [PR](https://github.com/Netflix/lemur-docker/pulls).
+
+Starting with more control
+--------
+
+Check out the [lemur repo](https://github.com/Netflix/lemur) and make a local copy of the config files:
+
+```bash
+git clone --depth=1 git@github.com:Netflix/lemur.git lemur-build-docker/.lemur
 cp .lemur.env.dist .lemur.env
 cp .pgsql.env.dist .pgsql.env
 ```    
