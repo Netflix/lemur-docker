@@ -22,15 +22,11 @@ Requirements
 Starting
 --------
 
-Check out the lemur-docker and lemur repos:
+Check out the lemur-docker and lemur repos and make a local copy of the config files:
 ```bash
 git clone git@github.com:Netflix/lemur-docker.git
 cd lemur-docker
 git clone git@github.com:Netflix/lemur.git lemur-build-docker/lemur
-```
-
-Copy env files and edit if needed:
-```bash
 cp .lemur.env.dist .lemur.env
 cp .pgsql.env.dist .pgsql.env
 ```    
@@ -63,7 +59,7 @@ This project launches four containers:
 
 Externally, only `nginx` exposes any ports. This container exposes TCP 87 and 447. We use standard ports to avoid conflicts.
 
-The `lemur` container is built on a local copy of the Lemur code. It runs three processes via `supervisord`:
+The `lemur` container is built on a local copy of the Lemur code. It runs two processes via `supervisord`:
 
 - lemur
 - lemur-celery
@@ -91,9 +87,12 @@ docker-compose start
 Your changes should now be reflected in Lemur.
 
 *Database configuration*
-This Docker configuration includes three ways to run the database, controlled via the option `POSTGRES_DB_MODE` in `pgsql-env`:
+Database configuration is located in:
+- `.pgsql.env`
+
+This Docker configuration includes three ways to run the database, controlled via the option `POSTGRES_DB_MODE` in `.pgsql.env`:
 - `init` will create a brand new Lemur database, initialized with base data
-- `load-frum-dump` will use specified DB info to dump another database and load it into the container database (see `pgsql-env` for config options)
+- `load-frum-dump` will use specified DB info to dump another database and load it into the container database (see `.pgsql.env` for config options)
 - blank/not set will reuse whatever data already exists in the volume `lemur-docker_pg_data`
 
 Note that the `init` and `load-from-dump` options will drop whatever data is already in the volume. Aside from those, 
@@ -116,7 +115,7 @@ persisted securely for anything other than experimentation.
 
 ### Default credentials on the postgres database
 
-The username for the postgres database is `lemur` and the default password is `12345` (located in `pgsql-env`).
+The username for the postgres database is `lemur` and the default password is `12345` (located in `.pgsql.env`).
 
 ### Untrusted web certificate
 
