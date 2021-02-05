@@ -1,5 +1,5 @@
 #############  BUILDER  #############
-FROM ubuntu:18.04 as builder
+FROM ubuntu:20.04 as builder
 LABEL maintainer="Netflix Open Source Development <talent@netflix.com>"
 
 ARG DEBIAN_FRONTEND=noninteractive
@@ -11,10 +11,9 @@ COPY lemur/ /opt/lemur
 WORKDIR /opt/lemur
 
 RUN apt-get update && \
-    apt-get -y upgrade && apt-get install -y libpq-dev curl build-essential locales libffi-dev libsasl2-dev libldap2-dev \
-                                             dh-autoreconf git python3-dev python3-pip python3-venv python3-wheel && \
-    curl -sL https://deb.nodesource.com/setup_10.x | bash - && \
-    apt-get install -y nodejs && \
+    apt-get -y --no-install-recommends upgrade && \
+    apt-get install -y --no-install-recommends libpq-dev curl build-essential locales libffi-dev libsasl2-dev libldap2-dev \
+        dh-autoreconf git python3-dev python3-pip python3-venv python3-wheel nodejs npm && \
     locale-gen en_US.UTF-8 && export LC_ALL=en_US.UTF-8 && \
     npm config set registry http://registry.npmjs.org/ && \
     npm install npm -g && \
@@ -28,10 +27,10 @@ RUN apt-get update && \
     node_modules/.bin/gulp --cwd /opt/lemur package && \
     npm cache clean --force && \
     rm -rf node_modules && \
-    python -c 'print(" \033[32m BUILDER DONE \033[0m ")'
+    python3 -c 'print(" \033[32m BUILDER DONE \033[0m ")'
 
 #############  APP  #############
-FROM ubuntu:18.04
+FROM ubuntu:20.04
 LABEL maintainer="Netflix Open Source Development <talent@netflix.com>"
 
 ARG DEBIAN_FRONTEND=noninteractive
@@ -53,7 +52,7 @@ WORKDIR /opt/lemur
 RUN addgroup --gid ${gid} ${group} && \
     adduser --gecos "" --disabled-password --ingroup ${group} --uid ${uid} ${user} && \
     apt-get update && apt-get -y --no-install-recommends upgrade && \
-    apt-get -y --no-install-recommends install python3 locales haveged supervisor curl postgresql-client && \
+    apt-get -y --no-install-recommends install python3 locales haveged supervisor curl postgresql-client openssl && \
     locale-gen en_US.UTF-8 && export LC_ALL=en_US.UTF-8 && \
     mkdir -p /opt/lemur /home/lemur/.lemur/ && \
     touch /home/lemur/.lemur/lemur.log && \
@@ -62,7 +61,7 @@ RUN addgroup --gid ${gid} ${group} && \
     apt-get clean autoclean && \
     apt-get autoremove --yes && \
     rm -rf /var/lib/{apt,dpkg,cache,log}/ && \
-    python -c 'print(" \033[32m APP BUILD DONE \033[0m ")'
+    python3 -c 'print(" \033[32m APP BUILD DONE \033[0m ")'
 
 COPY ./files/entrypoint /
 #COPY lemur.conf.py /home/lemur/.lemur/lemur.conf.py

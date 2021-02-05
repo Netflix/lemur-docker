@@ -10,7 +10,7 @@ networks:
 
 services:
   postgres:
-    image: "postgres:13.1-alpine"
+    image: "postgres:12-alpine" # default version of Ubuntu 20.02, apt-cache show postgresql
     restart: on-failure
     networks:
       - appnet
@@ -20,7 +20,7 @@ services:
       - .pgsql.env
 
   redis:
-    image: "redis:alpine3.12"
+    image: "redis:5.0-alpine" # default version of Ubuntu 20.02, apt-cache show redis-server
     restart: on-failure
     networks:
       - appnet
@@ -28,7 +28,7 @@ services:
   nginx:
     build:
       context: ./nginx
-    container_name: lemur-nginx
+    #container_name: lemur-nginx
     networks:
       - appnet
     volumes:
@@ -44,7 +44,7 @@ services:
     image: netlix-lemur:latest
     build:
       context: ./lemur-build-docker
-    container_name: lemur
+    #container_name: lemur
     restart: on-failure
     networks:
       - appnet
