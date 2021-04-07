@@ -47,7 +47,7 @@ Starting with more control
 Check out the [lemur repo](https://github.com/Netflix/lemur) and make a local copy of the config files:
 
 ```bash
-git clone --depth=1 git@github.com:Netflix/lemur.git lemur-build-docker/.lemur
+git clone --depth=1 https://github.com/Netflix/lemur.git lemur-build-docker/lemur
 cp .lemur.env.dist .lemur.env
 cp .pgsql.env.dist .pgsql.env
 ```    
