@@ -15,7 +15,7 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends libpq-dev curl build-essential locales libffi-dev libsasl2-dev libldap2-dev \
         dh-autoreconf git python3-dev python3-pip python3-venv python3-wheel nodejs npm && \
     locale-gen en_US.UTF-8 && export LC_ALL=en_US.UTF-8 && \
-    npm config set registry http://registry.npmjs.org/ && \
+    npm config set registry https://registry.npmjs.org/ && \
     npm install npm -g && \
     echo "Running with nodejs:" && node -v && \
     python3 -m venv /opt/venv && \
