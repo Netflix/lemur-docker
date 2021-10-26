@@ -41,7 +41,7 @@ services:
       - 447:443
 
   lemur:
-    image: netlix-lemur:latest
+    image: netflix-lemur:latest
     build:
       context: ./lemur-build-docker
     #container_name: lemur
