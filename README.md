@@ -143,7 +143,7 @@ The username for the postgres database is `lemur` and the default password is `1
 The certificate used by nginx to serve Lemur in the container is self-signed and untrusted. You would need to use a 
 trusted certificate if you were to run this for anything other than experimentation.
 
-Alternatively, for local development, [mkcert][] can be used to generate a locally-trusted development certificate
+Alternatively, for local development, [mkcert](https://github.com/FiloSottile/mkcert) can be used to generate a locally-trusted development certificate
 and key. For nginx to use these files they must be mounted into the nginx container to `/etc/nginx/ssl/server.crt`
 and `/etc/nginx/ssl/server-key.crt` respectively.
 
@@ -177,4 +177,4 @@ Example:
    make restart_containers
    ```
 
-[mkcert]: https://github.com/FiloSottile/mkcert
+
