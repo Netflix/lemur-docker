@@ -1,3 +1,10 @@
+> [!WARNING]
+> **This repository is now archived and read-only as of June 15, 2026.**
+>
+> No new pull requests, issues, or contributions will be accepted. Existing content will remain available and publicly accessible, but this repository is no longer actively maintained. If you need to continue making changes, please fork this repository.
+>
+> Thank you to everyone who has contributed over the years.
+
 Lemur Docker
 ============
 
