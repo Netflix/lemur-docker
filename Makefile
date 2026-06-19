@@ -5,8 +5,7 @@
 SHELL := $(shell which bash)
 # Get docker path or an empty string
 DOCKER := $(shell command -v docker)
-# Get docker-compose path or an empty string
-DOCKER_COMPOSE := $(shell command -v docker-compose)
+
 
 # Test if the dependencies we need to run this Makefile are installed
 deps:
@@ -14,10 +13,7 @@ ifndef DOCKER
 	@echo "Docker is not available. Please install docker"
 	@exit 1
 endif
-ifndef DOCKER_COMPOSE
-	@echo "docker-compose is not available. Please install docker-compose"
-	@exit 1
-endif
+
 
 # TODO: for future use, will tag docker build
 COMMIT := $(shell git rev-list -1 HEAD)
@@ -31,7 +27,7 @@ LEMUR_GIT_DIR = lemur-build-docker/lemur
 
 clean: deps
 	rm -rf $(LEMUR_GIT_DIR)
-	docker-compose down -v || sudo docker-compose down -v
+	docker compose down -v || sudo docker compose down -v
 
 all: deps
 	$(MAKE) copy_env_files
@@ -48,11 +44,11 @@ lemur_checkout:
 	cd $(LEMUR_GIT_DIR) && git pull
 
 build_containers: deps
-	docker-compose build || sudo docker-compose build || echo "failed to build containers"
+	docker compose build || sudo docker compose build || echo "failed to build containers"
 
 restart_containers: deps
-	docker-compose stop || sudo docker-compose stop || echo "failed to stop containers"
-	docker-compose up -d || sudo docker-compose up -d || echo "failed to start containers"
+	docker compose stop || sudo docker compose stop || echo "failed to stop containers"
+	docker compose up -d || sudo docker compose up -d || echo "failed to start containers"
 
 # TODO: should run with sudo if you do not have access rights to docker
 inspect_image_size: deps
